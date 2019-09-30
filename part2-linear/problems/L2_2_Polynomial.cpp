@@ -59,13 +59,15 @@ void Attach(int c, int e, Polynomial & pRear)
 Polynomial Add(Polynomial P1, Polynomial P2)
 {
 	Polynomial t1, t2, P, Rear, t;
+	int sum;
 	t1 = P1; t2 = P2;
 	P = new PolyNode; P->link = NULL;
 	Rear = P;
 	while (t1&&t2)
 	{
 		if (t1->expon == t2->expon) {
-			Attach(t1->coef + t2->coef, t1->expon, Rear);
+			sum = t1->coef + t2->coef;
+			if (sum) Attach(sum, t1->expon, Rear);
 			t1 = t1->link; t2 = t2->link;
 		}
 		else if (t1->expon > t2->expon) {
