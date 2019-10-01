@@ -77,14 +77,19 @@ int main()
         {
             if (pre)
                 cur->nextAddress = pre->address;
+            else
+                cur->nextAddress = -1;
             cur->next = pre;
             pre = cur;
             cur = next;
             if (cur->next)
                 next = cur->next;
         }
-        list->nextAddress = stop->address;
-        list->next = stop;
+        if (stop)
+        {
+            list->nextAddress = stop->address;
+            list->next = stop;
+        }
         list = pre;
     }
     printList(list);
