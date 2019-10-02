@@ -1,117 +1,53 @@
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <vector>
+#include<iostream>  
+#include<stdio.h>  
+#include<algorithm>
 #include <iomanip>
+
 using namespace std;
 
-typedef struct LinkedNode *LinkedList;
-struct LinkedNode
+#define MAXSIZE 100010
+
+struct node  
 {
-    int address;
-    int data;
-    int nextAddress;
-    LinkedList next;
+	int data;
+	int next;
 };
-struct find_address
-{
-    int address;
-    find_address(int address) : address(address) {}
-    bool operator()(const LinkedList &n) const
-    {
-        return n->address == address;
-    }
-};
-int formatAddress(string address);
-void printList(LinkedList list);
+
+int list[MAXSIZE];
+struct node node[MAXSIZE];
 int main()
 {
-    //1.读数据
-    int start, total, reverse, data;
-    string tmp;
-    cin >> tmp;
-    start = formatAddress(tmp);
-    cin >> total;
-    cin >> reverse;
-    vector<LinkedList> arr;
-    for (int i = 0; i < total; i++)
-    {
-        LinkedList node = new LinkedNode;
-        cin >> tmp;
-        node->address = formatAddress(tmp);
-        cin >> data;
-        node->data = data;
-        cin >> tmp;
-        node->nextAddress = formatAddress(tmp);
-        node->next = NULL;
-        arr.push_back(node);
-    }
-    //2.构造链表
-    vector<LinkedList>::iterator it;
-    it = find_if(arr.begin(), arr.end(), find_address(start));
-    LinkedList list = (*it); //结果链表头
-    LinkedList cur = list;   //表尾指针
-    while (true)
-    {
-        int nextAddress = cur->nextAddress;
-        if (nextAddress == -1)
-            break;
-        it = find_if(arr.begin(), arr.end(), find_address(nextAddress));
-        cur->next = *it;
-        cur = cur->next;
-    }
-    //3.反转链表
-    if (reverse > 1)
-    {
-        LinkedList pre, next, stop;
-        int tmpReverse = reverse;
-        stop = list;
-        while (tmpReverse--)
-        {
-            stop = stop->next;
-        }
-        pre = NULL;
-        cur = list;
-        next = cur->next;
-        while (reverse--)
-        {
-            if (pre)
-                cur->nextAddress = pre->address;
-            else
-                cur->nextAddress = -1;
-            cur->next = pre;
-            pre = cur;
-            cur = next;
-            if (cur->next)
-                next = cur->next;
-        }
-        if (stop)
-        {
-            list->nextAddress = stop->address;
-            list->next = stop;
-        }
-        list = pre;
-    }
-    printList(list);
-    return 0;
-}
+	int start, n, k, i, j, p;
+	cin >> start >> n >> k;
+	int address, data, next;
+	for (i = 0; i < n; i++)
+	{
+		cin >> address >> data >> next;
+		node[address].data = data;
+		node[address].next = next;
+	}
 
-int formatAddress(string address)
-{
-    return stoi(address.erase(0, min(address.find_first_not_of('0'), address.size() - 1)));
-}
-
-void printList(LinkedList list)
-{
-    while (list)
-    {
-        cout << setw(5) << setfill('0') << list->address;
-        cout << ' ' << list->data << ' ';
-        if (list->nextAddress == -1)
-            cout << list->nextAddress;
-        else
-            cout << setw(5) << setfill('0') << list->nextAddress;
-        cout << endl;
-        list = list->next;
-    }
+	j = 0;
+	p = start;
+	while (p != -1)
+	{
+		//按照节点地址顺序排列的数组
+		list[j++] = p;
+		p = node[p].next;
+	}
+	i = 0;
+	while (i + k <= j)   //每k个节点做一次翻转  
+	{
+		reverse(&list[i], &list[i + k]);
+		i = i + k;
+	}
+	for (i = 0; i < j - 1; i++) { //注意：这里不能用给定的n，因为有可能有节点不在链表上
+		cout << setw(5) << setfill('0') << list[i];
+		cout << ' ' << node[list[i]].data << ' '; 
+		cout << setw(5) << setfill('0') << list[i + 1] << endl;
+	}
+	cout << setw(5) << setfill('0') << list[i];
+	cout << ' ' << node[list[i]].data << ' ';
+	cout << -1 << endl;
+	return 0;
 }
