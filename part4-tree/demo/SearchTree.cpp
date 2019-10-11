@@ -7,6 +7,7 @@ BinTree Insert( BinTree BST, ElementType X )
     }
     else { /* 开始找要插入元素的位置 */
         if( X < BST->Data )
+            //子树的根节点可能发生变化，所以在递归时要赋值
             BST->Left = Insert( BST->Left, X );   /*递归插入左子树*/
         else  if( X > BST->Data )
             BST->Right = Insert( BST->Right, X ); /*递归插入右子树*/
