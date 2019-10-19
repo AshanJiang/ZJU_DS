@@ -32,11 +32,17 @@ int main()
 	return 0;
 }
 
+/*
+找父节点，路径压缩
+*/
 SetName Find(SetType S, ElementType X) 
 {
 	//数组下标是数据，数组内容是父节点
-	for (; S[X] >= 0; X = S[X]);
-	return X;
+	if (S[X] < 0)
+		return X;
+	else
+		//先找到根；把根变为X的父节点；再返回根
+		return S[X] = Find(S, S[X]); //返回的是X的父节点
 }
 
 void Union(SetType S, SetName Root1, SetName Root2)
@@ -51,6 +57,9 @@ void Union(SetType S, SetName Root1, SetName Root2)
 	}
 }
 
+/*
+最坏情况下也只有logN，每次都是等规模归并
+*/
 void Union_scale(SetType S, SetName Root1, SetName Root2)
 {
 	//按规模归并
