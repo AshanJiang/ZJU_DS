@@ -41,7 +41,13 @@ SetName Find(SetType S, ElementType X)
 void Union(SetType S, SetName Root1, SetName Root2)
 {
 	//假设Root2和Root1是不同集合根节点
-	S[Root2] = Root1; //把Root2连接向Root1
+	if (S[Root2] < S[Root1])
+		S[Root1] = Root2;
+	else{
+		//按高度归并
+		if (S[Root2] == S[Root1]) S[Root1]--;
+		S[Root2] = Root1; //把Root2连接向Root1
+	}
 }
 
 void Initialization(SetType & S, ElementType n)
