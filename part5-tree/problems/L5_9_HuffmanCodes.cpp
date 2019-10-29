@@ -14,10 +14,12 @@ struct HNode {
 	HuffmanTree *data;
 	int size;
 };
+int CODE_LEN;
 MinHeap initMinHeap();
 void insertHeap(MinHeap H, HuffmanTree T);
 HuffmanTree deleteMin(MinHeap H);
 HuffmanTree initHuffman(MinHeap H);
+void countCodeLen(HuffmanTree T, int count);
 int main() {
 	//N字符数量，f字符频率数组
 	int N, f[MAX_N], i, j;
@@ -42,6 +44,9 @@ int main() {
 	//2.2构造哈夫曼树
 	HuffmanTree hTree = initHuffman(minHeap);
 	//3.计算最小码长
+	CODE_LEN = 0;
+	countCodeLen(hTree, 0);
+	//cout << "code length= " << CODE_LEN << endl;
 	//4.读入待检测编码
 	//5.比较码长
 	//6.根据编码构造哈夫曼树，判断是否在叶子节点上
@@ -97,4 +102,14 @@ HuffmanTree initHuffman(MinHeap H) {
 	}
 	T = deleteMin(H);
 	return T;
+}
+
+void countCodeLen(HuffmanTree T, int count) {
+	if (T) {
+		if (T->left == NULL && T->right == NULL) {
+			CODE_LEN += T->weight*count;
+		}
+		countCodeLen(T->left, count + 1);
+		countCodeLen(T->right, count + 1);
+	}
 }
