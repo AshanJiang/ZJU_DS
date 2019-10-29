@@ -17,7 +17,7 @@ struct HNode {
 MinHeap initMinHeap();
 void insertHeap(MinHeap H, HuffmanTree T);
 HuffmanTree deleteMin(MinHeap H);
-HuffmanTree inintHuffman(MinHeap H);
+HuffmanTree initHuffman(MinHeap H);
 int main() {
 	//N字符数量，f字符频率数组
 	int N, f[MAX_N], i, j;
@@ -40,7 +40,7 @@ int main() {
 		insertHeap(minHeap, t);
 	}
 	//2.2构造哈夫曼树
-	HuffmanTree hTree = inintHuffman(minHeap);
+	HuffmanTree hTree = initHuffman(minHeap);
 	//3.计算最小码长
 	//4.读入待检测编码
 	//5.比较码长
@@ -84,7 +84,7 @@ HuffmanTree deleteMin(MinHeap H) {
 	return minItem;
 }
 
-HuffmanTree inintHuffman(MinHeap H) {
+HuffmanTree initHuffman(MinHeap H) {
 	int i, n; HuffmanTree T;
 	n = H->size;
 	//循环堆大小(size-1)次
