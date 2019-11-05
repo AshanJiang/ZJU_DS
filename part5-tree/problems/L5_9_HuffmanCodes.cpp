@@ -19,7 +19,7 @@ void insertHeap(MinHeap H, HuffmanTree T);
 HuffmanTree deleteMin(MinHeap H);
 HuffmanTree initHuffman(MinHeap H);
 void countCodeLen(HuffmanTree T, int count);
-bool createTestTree(HuffmanTree T, string code);
+bool createTestTree(HuffmanTree T, string code, int weight);
 int main() {
 	//N字符数量，f字符频率数组
 	int N, f[MAX_N], i, j;
@@ -69,7 +69,7 @@ int main() {
 			for (int i = 0; i < N; i++)
 			{
 				//6.根据编码构造哈夫曼树，判断是否在叶子节点上
-				if (!createTestTree(testTree, codes[i])) {
+				if (!createTestTree(testTree, codes[i], f[i])) {
 					flag = false;
 					cout << "No" << endl;
 					break;
@@ -142,7 +142,7 @@ void countCodeLen(HuffmanTree T, int count) {
 	}
 }
 //检查是否是前缀码
-bool createTestTree(HuffmanTree T, string code) {
+bool createTestTree(HuffmanTree T, string code, int weight) {
 	HuffmanTree tmp = T;
 	for (std::string::size_type i = 0; i < code.size(); i++) {
 		if (code[i] == '0') {
@@ -171,8 +171,10 @@ bool createTestTree(HuffmanTree T, string code) {
 			}
 		}
 	}
-	if (tmp->right == NULL && tmp->left == NULL)
+	if (tmp->right == NULL && tmp->left == NULL){
+		tmp->weight = weight;
 		return true;
+	}
 	else
 		return false;
 }
