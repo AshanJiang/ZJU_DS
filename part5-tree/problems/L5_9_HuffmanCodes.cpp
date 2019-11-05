@@ -1,11 +1,10 @@
 #include <iostream>
 #include <string>
-#include "main.h"
 using namespace std;
 constexpr auto MAX_N = 63;
 typedef struct TreeNode *HuffmanTree;
 struct TreeNode {
-	int weight;
+	int weight = 0;
 	HuffmanTree left = NULL, right = NULL;
 };
 //最小堆
@@ -20,6 +19,7 @@ void insertHeap(MinHeap H, HuffmanTree T);
 HuffmanTree deleteMin(MinHeap H);
 HuffmanTree initHuffman(MinHeap H);
 void countCodeLen(HuffmanTree T, int count);
+bool createTestTree(HuffmanTree T, string code);
 int main() {
 	//N字符数量，f字符频率数组
 	int N, f[MAX_N], i, j;
@@ -46,10 +46,38 @@ int main() {
 	//3.计算最小码长
 	CODE_LEN = 0;
 	countCodeLen(hTree, 0);
-	//cout << "code length= " << CODE_LEN << endl;
-	//4.读入待检测编码
-	//5.比较码长
-	//6.根据编码构造哈夫曼树，判断是否在叶子节点上
+	//4.读入待检测编码code[i]最长为N-1
+	int M;
+	char tmp;
+	string codes[MAX_N];
+	cin >> M;
+	for (int i = 0; i < M; i++) {
+		bool flag = true;
+		int testCodeLen = 0; //输入编码码长
+		for (int j = 0; j < N; j++) {
+			//假设按照顺序输入，否则需要查找
+			cin >> tmp;
+			cin >> codes[j];
+			testCodeLen += codes[j].length()*f[j];
+		}
+		//5.比较码长
+		if (testCodeLen != CODE_LEN) {
+			cout << "No" << endl;
+		}
+		else {
+			HuffmanTree testTree = new TreeNode;
+			for (int i = 0; i < N; i++)
+			{
+				//6.根据编码构造哈夫曼树，判断是否在叶子节点上
+				if (!createTestTree(testTree, codes[i])) {
+					flag = false;
+					cout << "No" << endl;
+					break;
+				}
+			}
+			if (flag) cout << "Yes" << endl;
+		}
+	}
 	return 0;
 }
 
@@ -112,4 +140,39 @@ void countCodeLen(HuffmanTree T, int count) {
 		countCodeLen(T->left, count + 1);
 		countCodeLen(T->right, count + 1);
 	}
+}
+//检查是否是前缀码
+bool createTestTree(HuffmanTree T, string code) {
+	HuffmanTree tmp = T;
+	for (std::string::size_type i = 0; i < code.size(); i++) {
+		if (code[i] == '0') {
+			if (tmp->left) {
+				tmp = tmp->left;
+				if (tmp->weight != 0) {
+					return false;
+				}
+			}
+			else {
+				tmp->left = new TreeNode;
+				tmp = tmp->left;
+			}
+		}
+		//=='1'
+		else {
+			if (tmp->right) {
+				tmp = tmp->right;
+				if (tmp->weight != 0) {
+					return false;
+				}
+			}
+			else {
+				tmp->right = new TreeNode;
+				tmp = tmp->right;
+			}
+		}
+	}
+	if (tmp->right == NULL && tmp->left == NULL)
+		return true;
+	else
+		return false;
 }
